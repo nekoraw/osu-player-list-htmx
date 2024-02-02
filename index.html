@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://unpkg.com/htmx.org@1.9.10"
+      integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="flex m-8 flex-col">
+      <div class="flex-grow flex mx-8">
+        <form
+          action=""
+          class="flex items-center flex-row flex-wrap"
+          hx-post="/add-user/"
+          hx-target="#player-list"
+          hx-swap="beforeend"
+        >
+          <div class="text-4xl text-left flex">Add user:</div>
+          <div class="flex content-center">
+            <input
+              type="text"
+              name="username"
+              id="username"
+              placeholder="Username"
+              class="block border border-black w-36 m-3 text-center"
+            />
+            <input
+              type="submit"
+              value="Confirm"
+              class="block border border-black w-36 m-3 bg-gray-200 hover:bg-gray-100 active:bg-gray-300 rounded-full"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="flex-grow border-t border-black m-4"></div>
+      <div class="text-4xl text-left flex-grow flex mx-8">Users</div>
+      <div class="w-auto flex justify-start flex-wrap" id="player-list">
+        {{range .}}
+
+        <div
+          class="flex flex-row text-left min-w-[475px] mx-4 my-2 border border-slate-500 border-1 p-3"
+          id="card"
+        >
+          <img src="{{ .AvatarUrl }}" class="size-32 flex m-4 rounded-lg" />
+
+          <div class="flex flex-grow flex-col">
+            <div class="flex flex-row">
+              <img
+                src="https://osu.ppy.sh/assets/images/flags/{{ .CountrySVG }}.svg"
+                class="size-8 flex self-center"
+              />
+              <a
+                href="https://osu.ppy.sh/u/{{ .ID }}"
+                class="text-blue-500 underline grow"
+                ><div class="text-2xl mx-4">{{ .Username }}</div></a
+              >
+              <div class="text-right text-red-500">
+                <div
+                  class="border border-1 border-red bg-red-300 hover:bg-red-200 active:bg-red-400 rounded px-1 pt-1.5 font-bold rounded-full"
+                  hx-get="/delete-element/"
+                  hx-trigger="click"
+                  hx-target="closest #card"
+                  hx-swap="outerHTML"
+                >
+                  <span class="material-symbols-outlined"> delete </span>
+                </div>
+              </div>
+            </div>
+
+            <div>PP: {{ .UserStatistics.PP }}</div>
+            <div>Rank: #{{ .UserStatistics.GlobalRank }}</div>
+          </div>
+        </div>
+        {{end}}
+      </div>
+    </div>
+  </body>
+</html>
